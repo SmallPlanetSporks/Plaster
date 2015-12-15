@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		C4440DD41C2053010015C79A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4440DD31C2053010015C79A /* main.swift */; };
+		C4440DDD1C2053930015C79A /* CommandLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4440DDA1C2053930015C79A /* CommandLine.swift */; };
+		C4440DDE1C2053930015C79A /* Option.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4440DDB1C2053930015C79A /* Option.swift */; };
+		C4440DDF1C2053930015C79A /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4440DDC1C2053930015C79A /* StringExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +28,9 @@
 /* Begin PBXFileReference section */
 		C4440DD01C2053010015C79A /* plaster */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = plaster; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4440DD31C2053010015C79A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		C4440DDA1C2053930015C79A /* CommandLine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CommandLine.swift; path = CommandLine/CommandLine/CommandLine.swift; sourceTree = SOURCE_ROOT; };
+		C4440DDB1C2053930015C79A /* Option.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Option.swift; path = CommandLine/CommandLine/Option.swift; sourceTree = SOURCE_ROOT; };
+		C4440DDC1C2053930015C79A /* StringExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StringExtensions.swift; path = CommandLine/CommandLine/StringExtensions.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +64,9 @@
 			isa = PBXGroup;
 			children = (
 				C4440DD31C2053010015C79A /* main.swift */,
+				C4440DDA1C2053930015C79A /* CommandLine.swift */,
+				C4440DDB1C2053930015C79A /* Option.swift */,
+				C4440DDC1C2053930015C79A /* StringExtensions.swift */,
 			);
 			path = plaster;
 			sourceTree = "<group>";
@@ -119,7 +128,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C4440DDF1C2053930015C79A /* StringExtensions.swift in Sources */,
 				C4440DD41C2053010015C79A /* main.swift in Sources */,
+				C4440DDE1C2053930015C79A /* Option.swift in Sources */,
+				C4440DDD1C2053930015C79A /* CommandLine.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

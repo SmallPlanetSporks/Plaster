@@ -15,8 +15,6 @@ import Foundation
 let cli = CommandLine()
 let inputPath = StringOption(shortFlag: "i", longFlag: "input", required: true,
     helpMessage: "Input plist dictionary file")
-//let output = EnumOption<Operation>(shortFlag: "o", longFlag: "output", required: false,
-//    helpMessage: "File operation - c for create, x for extract, l for list, or v for verify.")
 cli.setOptions(inputPath)
 
 do {
@@ -25,8 +23,6 @@ do {
     cli.printUsage(error)
     exit(EX_USAGE)
 }
-
-let dictionary = NSDictionary(contentsOfFile: inputPath.value!)
 
 extension String {
     var colorCode: String? {
@@ -72,16 +68,18 @@ func process(dictionary: NSDictionary) -> String {
     var depth = 0
 
     func processLevel(dictionary: NSDictionary) {
-        depth += 1
+        
         func indention(depth: Int) -> String {
             return ([String](count:depth, repeatedValue: indent)).reduce(""){ $0 + $1 }
         }
+        
         func cleanName(key: String) -> String {
             if String(key.characters.first!).isNumeric {
                 return "_\(key)"
             }
             return key
         }
+        
         func valueCode(value: AnyObject) -> String {
             if let value = value as? Int {
                 return String(value)
@@ -99,9 +97,12 @@ func process(dictionary: NSDictionary) -> String {
             let cleaned = value.stringByReplacingOccurrencesOfString("\"", withString: "\\\"")
             return "\"\(cleaned)\""
         }
+        
         func processValue(value: AnyObject, forKey key: String) {
             output += indention(depth) + "static let \(cleanName(key)) = \(valueCode(value)) \n"
         }
+        
+        depth += 1
         for (key, value) in dictionary {
             if let value = value as? NSDictionary {
                 output += indention(depth) + "struct \(cleanName(key as! String)) {\n"
@@ -121,6 +122,7 @@ func process(dictionary: NSDictionary) -> String {
     return output
 }
 
-let out = process(dictionary!)
-
-print(out)
+if let path = inputPath.value, dictionary = NSDictionary(contentsOfFile: path) {
+    let out = process(dictionary)
+    print(out)
+}

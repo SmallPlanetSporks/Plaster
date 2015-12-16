@@ -63,7 +63,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "-i /Users/qmchenry/Development/PPFA/ppfa_Planned/Planned/Assets/config.plist"
+            argument = "-i $PROJECT_DIR/test.plist"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

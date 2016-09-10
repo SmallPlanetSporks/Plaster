@@ -28,9 +28,9 @@ extension String {
     var colorCode: String? {
         var (r,g,b,a): (CGFloat, CGFloat, CGFloat, CGFloat) = (0.0, 0.0, 0.0, 1.0)
         if hasPrefix("#") {
-            let substring = substringFromIndex(startIndex.advancedBy(1))
+            let substring = self.substring(from: characters.index(startIndex, offsetBy: 1))
             var hexNumber:UInt32 = 0;
-            let _ = NSScanner(string: substring).scanHexInt(&hexNumber)
+            let _ = Scanner(string: substring).scanHexInt32(&hexNumber)
             switch substring.characters.count {
             case 8:
                 r = CGFloat((hexNumber & 0xFF000000) >> 24) / 255.0
@@ -63,24 +63,24 @@ extension String {
 
 let indent = "  "
 
-func process(dictionary: NSDictionary) -> String {
+func process(_ dictionary: NSDictionary) -> String {
     var output = ""
     var depth = 0
 
-    func processLevel(dictionary: NSDictionary) {
+    func processLevel(_ dictionary: NSDictionary) {
         
-        func indention(depth: Int) -> String {
-            return ([String](count:depth, repeatedValue: indent)).reduce(""){ $0 + $1 }
+        func indention(_ depth: Int) -> String {
+            return ([String](repeating: indent, count: depth)).reduce(""){ $0 + $1 }
         }
         
-        func cleanName(key: String) -> String {
+        func cleanName(_ key: String) -> String {
             if String(key.characters.first!).isNumeric {
                 return "_\(key)"
             }
             return key
         }
         
-        func valueCode(value: AnyObject) -> String {
+        func valueCode(_ value: AnyObject) -> String {
             if let value = value as? Int {
                 return String(value)
             }
@@ -94,11 +94,11 @@ func process(dictionary: NSDictionary) -> String {
             if let colorCode = value.colorCode {
                 return colorCode
             }
-            let cleaned = value.stringByReplacingOccurrencesOfString("\"", withString: "\\\"")
+            let cleaned = value.replacingOccurrences(of: "\"", with: "\\\"")
             return "\"\(cleaned)\""
         }
         
-        func processValue(value: AnyObject, forKey key: String) {
+        func processValue(_ value: AnyObject, forKey key: String) {
             output += indention(depth) + "static let \(cleanName(key)) = \(valueCode(value)) \n"
         }
         
@@ -109,7 +109,7 @@ func process(dictionary: NSDictionary) -> String {
                 processLevel(value)
                 output += indention(depth) + "}\n"
             } else {
-                processValue(value, forKey: key as! String)
+                processValue(value as AnyObject, forKey: key as! String)
             }
         }
         depth -= 1
@@ -122,7 +122,7 @@ func process(dictionary: NSDictionary) -> String {
     return output
 }
 
-if let path = inputPath.value, dictionary = NSDictionary(contentsOfFile: path) {
+if let path = inputPath.value, let dictionary = NSDictionary(contentsOfFile: path) {
     let out = process(dictionary)
     print(out)
 }

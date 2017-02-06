@@ -7,15 +7,16 @@
 //
 
 import Foundation
+import CommandLineKit
 
 // todo - option to change name of outer struct, default Config
 // indent options
 
 
 let cli = CommandLine()
-let inputPath = StringOption(shortFlag: "i", longFlag: "input", required: true,
-    helpMessage: "Input plist dictionary file")
+let inputPath = StringOption(shortFlag: "i", longFlag: "input", required: true, helpMessage: "Input plist dictionary file")
 cli.setOptions(inputPath)
+
 
 do {
     try cli.parse()
@@ -87,7 +88,7 @@ func process(_ dictionary: NSDictionary) -> String {
             if let value = value as? Double {
                 return String(value)
             }
-            guard let value = value as? String else { assertionFailure("not a string"); return "" }
+            guard let value = value as? String else { return "" }
             if value.isNumeric {
                 return value
             }

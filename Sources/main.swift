@@ -8,6 +8,7 @@
 
 import Foundation
 import CommandLineKit
+import FileKit
 
 // todo - option to change name of outer struct, default Config
 // indent options
@@ -15,8 +16,8 @@ import CommandLineKit
 
 let cli = CommandLine()
 let inputPath = StringOption(shortFlag: "i", longFlag: "input", required: true, helpMessage: "Input plist dictionary file")
-cli.setOptions(inputPath)
-
+let outputPath = StringOption(shortFlag: "o", longFlag: "output", required: false, helpMessage: "Output file path, otherwise stdout")
+cli.setOptions(inputPath, outputPath)
 
 do {
     try cli.parse()
@@ -25,41 +26,28 @@ do {
     exit(EX_USAGE)
 }
 
-extension String {
-    var colorCode: String? {
-        var (r,g,b,a): (CGFloat, CGFloat, CGFloat, CGFloat) = (0.0, 0.0, 0.0, 1.0)
-        if hasPrefix("#") {
-            let substring = self.substring(from: characters.index(startIndex, offsetBy: 1))
-            var hexNumber:UInt32 = 0;
-            let _ = Scanner(string: substring).scanHexInt32(&hexNumber)
-            switch substring.characters.count {
-            case 8:
-                r = CGFloat((hexNumber & 0xFF000000) >> 24) / 255.0
-                g = CGFloat((hexNumber & 0x00FF0000) >> 16) / 255.0
-                b = CGFloat((hexNumber & 0x0000FF00) >> 8) / 255.0
-                a = CGFloat(hexNumber & 0x000000FF) / 255.0
-            case 6:
-                r = CGFloat((hexNumber & 0xFF0000) >> 16) / 255.0
-                g = CGFloat((hexNumber & 0x00FF00) >> 8) / 255.0
-                b = CGFloat(hexNumber & 0x0000FF) / 255.0
-            default: return nil
-            }
-            return "UIColor(red: \(r), green:\(g), blue:\(b), alpha:\(a))"
-        }
-        return nil
-    }
+let input = inputPath.value.map { Path($0) }
+
+guard let input = input else {
+    print("Error: input path could not be opened")
+    exit(-1)
 }
 
-extension String {
-    var isNumeric: Bool {
-        return Double(self) != nil
-    }
-    var isInteger: Bool {
-        return Int(self) != nil
-    }
-    var isColor: Bool {
-        return colorCode != nil
-    }
+let output = outputPath.value.map { Path($0) }
+let outputExists = output?.exists ?? false
+let outputEmpty = output?.fileSize ?? 0 == 0
+
+let outputNewer: Bool
+if let inputModDate = input.modificationDate, let outputModDate = output?.modificationDate {
+    outputNewer = outputModDate > inputModDate
+} else {
+    outputNewer = false
+}
+
+// should we perform the conversion?
+if !outputEmpty && outputNewer {
+    print("Plaster skipping conversion")
+    exit(0)
 }
 
 let indent = "  "
@@ -125,5 +113,15 @@ func process(_ dictionary: NSDictionary) -> String {
 
 if let path = inputPath.value, let dictionary = NSDictionary(contentsOfFile: path) {
     let out = process(dictionary)
-    print(out)
+    
+    if let output = output {
+        let outputFile = TextFile(path: output)
+        try out |> outputFile
+    } else {
+        print(out)
+    }
+    exit(0)
 }
+
+print("Error: unable to process file")
+exit(-1)

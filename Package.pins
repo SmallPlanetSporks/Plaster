@@ -1,0 +1,18 @@
+{
+  "autoPin": true,
+  "pins": [
+    {
+      "package": "CommandLine",
+      "reason": null,
+      "repositoryURL": "https://github.com/jatoben/CommandLine.git",
+      "version": "3.0.0-pre1"
+    },
+    {
+      "package": "FileKit",
+      "reason": null,
+      "repositoryURL": "https://github.com/qmchenry/FileKit.git",
+      "version": "4.0.2"
+    }
+  ],
+  "version": 1
+}

@@ -3,6 +3,8 @@
 /.build
 /Packages
 /*.xcodeproj
+Package.pins
+Package.resolved
 #
 build/
 *.pbxuser
